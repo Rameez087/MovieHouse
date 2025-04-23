@@ -1,0 +1,67 @@
+.backLink {
+    margin-bottom: 2rem;
+  }
+  
+  .backLink a {
+    color: #01b4e4;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .backLink a:hover {
+    text-decoration: underline;
+  }
+  
+  .directorProfile h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .biography {
+    margin-bottom: 3rem;
+  }
+  
+  .biography h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .biography h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: #01b4e4;
+  }
+  
+  .biography p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .filmography h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .filmography h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: #01b4e4;
+  }
+  
+  .movieGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }

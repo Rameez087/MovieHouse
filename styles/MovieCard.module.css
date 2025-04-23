@@ -1,0 +1,50 @@
+.card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .cardImage {
+    position: relative;
+    height: 0;
+    padding-top: 150%; /* 2:3 aspect ratio for movie posters */
+    overflow: hidden;
+  }
+  
+  .cardContent {
+    padding: 1rem;
+  }
+  
+  .cardContent h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+  }
+  
+  .cardContent p {
+    margin: 0 0 1rem 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  
+  .viewButton {
+    display: inline-block;
+    background-color: #01b4e4;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .viewButton:hover {
+    background-color: #0099c9;
+  }

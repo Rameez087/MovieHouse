@@ -1,0 +1,79 @@
+.loading, .error, .notFound {
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.2rem;
+  }
+  
+  .error {
+    color: #dc3545;
+  }
+  
+  .notFound {
+    color: #6c757d;
+  }
+  
+  .directorProfile {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .name {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .biography {
+    margin-bottom: 3rem;
+  }
+  
+  .biography h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .biography h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: #01b4e4;
+  }
+  
+  .biography p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  .filmography h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .filmography h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: #01b4e4;
+  }
+  
+  .movieGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .noMovies {
+    font-size: 1.2rem;
+    color: #6c757d;
+    text-align: center;
+    padding: 3rem 0;
+  }

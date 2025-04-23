@@ -1,0 +1,41 @@
+.title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: #01b4e4;
+  }
+  
+  .filterContainer {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .filterLabel {
+    margin-right: 1rem;
+    font-weight: 500;
+  }
+  
+  .selectFilter {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    min-width: 150px;
+  }
+  
+  .movieGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }

@@ -1,0 +1,103 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "Inception",
+      "directorId": 1,
+      "description": "A mind-bending thriller about dreams within dreams.",
+      "releaseYear": 2010,
+      "genreId": 1,
+      "rating": 8.8
+    },
+    {
+      "id": 2,
+      "title": "The Great Gatsby",
+      "directorId": 2,
+      "description": "A mysterious millionaire throws lavish parties in 1920s New York.",
+      "releaseYear": 2013,
+      "genreId": 3,
+      "rating": 7.2
+    },
+    {
+      "id": 3,
+      "title": "Interstellar",
+      "directorId": 1,
+      "description": "A team of explorers travel through a wormhole in space.",
+      "releaseYear": 2014,
+      "genreId": 2,
+      "rating": 8.6
+    },
+    {
+      "id": 4,
+      "title": "Parasite",
+      "directorId": 3,
+      "description": "A poor family schemes to become employed by a wealthy household.",
+      "releaseYear": 2019,
+      "genreId": 4,
+      "rating": 8.6
+    },
+    {
+      "id": 5,
+      "title": "The Matrix",
+      "directorId": 4,
+      "description": "A hacker discovers the reality he lives in is a simulation.",
+      "releaseYear": 1999,
+      "genreId": 1,
+      "rating": 8.7
+    },
+    {
+      "id": 6,
+      "title": "La La Land",
+      "directorId": 5,
+      "description": "A jazz musician and an aspiring actress fall in love in Los Angeles.",
+      "releaseYear": 2016,
+      "genreId": 3,
+      "rating": 8.0
+    }
+  ],
+  "genres": [
+    {
+      "id": 1,
+      "name": "Science Fiction"
+    },
+    {
+      "id": 2,
+      "name": "Adventure"
+    },
+    {
+      "id": 3,
+      "name": "Drama"
+    },
+    {
+      "id": 4,
+      "name": "Thriller"
+    }
+  ],
+  "directors": [
+    {
+      "id": 1,
+      "name": "Christopher Nolan",
+      "biography": "British-American director known for complex storytelling and visual innovation."
+    },
+    {
+      "id": 2,
+      "name": "Baz Luhrmann",
+      "biography": "Australian director known for visually extravagant films like Moulin Rouge! and The Great Gatsby."
+    },
+    {
+      "id": 3,
+      "name": "Bong Joon-ho",
+      "biography": "South Korean filmmaker acclaimed for combining drama, social commentary, and thrills."
+    },
+    {
+      "id": 4,
+      "name": "The Wachowskis",
+      "biography": "Sibling duo behind groundbreaking sci-fi films including The Matrix trilogy."
+    },
+    {
+      "id": 5,
+      "name": "Damien Chazelle",
+      "biography": "American director known for musical dramas like Whiplash and La La Land."
+    }
+  ]
+}
