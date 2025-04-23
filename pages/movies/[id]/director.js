@@ -39,8 +39,8 @@ export default function MovieDirector({ movie, director, directedMovies }) {
 
 export async function getStaticPaths() {
   return { 
-    paths: [], // No pre-rendered paths
-    fallback: true // Generate on-demand
+    paths: [], 
+    fallback: true 
   };
 }
 
