@@ -1,8 +1,12 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Layout({ children, title = 'Movie House' }) {
+  const { darkMode } = useTheme();
   return (
+   <div className={`app-container ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Head>
         <title>{title}</title>
@@ -56,6 +60,7 @@ export default function Layout({ children, title = 'Movie House' }) {
           </div>
         </div>
       </footer>
+    </div>
     </div>
   );
 }

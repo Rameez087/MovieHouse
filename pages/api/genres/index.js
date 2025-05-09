@@ -1,0 +1,11 @@
+// pages/api/genres/index.js
+import { genres } from '../../../data/mockData';
+
+export default function handler(req, res) {
+  if (req.method === 'GET') {
+    res.status(200).json(genres);
+  } else {
+    res.setHeader('Allow', ['GET']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+}
