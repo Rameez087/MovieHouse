@@ -1,66 +1,94 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useTheme } from '../contexts/ThemeContext';
+import { AppBar, Toolbar, Typography, Container, Box, Button, IconButton } from '@mui/material';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from './ThemeToggle';
 
 export default function Layout({ children, title = 'Movie House' }) {
-  const { darkMode } = useTheme();
-  return (
-   <div className={`app-container ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+  const { isDarkMode } = useTheme();
 
-    <div className="min-h-screen flex flex-col bg-gray-50">
+  return (
+    <Box sx={{ 
+      display: 'flex', 
+      flexDirection: 'column',
+      minHeight: '100vh',
+      bgcolor: isDarkMode ? 'grey.900' : 'grey.50',
+      color: isDarkMode ? 'grey.50' : 'grey.900'
+    }}>
       <Head>
         <title>{title}</title>
         <meta name="description" content="Movie House - Browse and discover movies" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="bg-blue-800 text-white">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold">Movie House</Link>
-            <nav>
-              <ul className="flex space-x-6">
-                <li>
-                  <Link href="/" className="hover:text-blue-200">Home</Link>
-                </li>
-                <li>
-                  <Link href="/movies" className="hover:text-blue-200">Movies</Link>
-                </li>
-                <li>
-                  <Link href="/genres" className="hover:text-blue-200">Genres</Link>
-                </li>
-                <li>
-                  <Link href="/directors" className="hover:text-blue-200">Directors</Link>
-                </li>
-                <li>
-                  <Link href="/help" className="hover:text-blue-200">Help</Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <AppBar position="static" color="primary">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Movie House
+            </Link>
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button color="inherit" component={Link} href="/movies">
+              Movies
+            </Button>
+            <Button color="inherit" component={Link} href="/genres">
+              Genres
+            </Button>
+            <Button color="inherit" component={Link} href="/directors">
+              Directors
+            </Button>
+            <Button color="inherit" component={Link} href="/help">
+              Help
+            </Button>
+            <ThemeToggle />
+          </Box>
+        </Toolbar>
+      </AppBar>
 
-      <main className="flex-grow">
+      <Container component="main" sx={{ flexGrow: 1, py: 4 }}>
         {children}
-      </main>
+      </Container>
 
-      <footer className="bg-gray-800 text-white py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>© {new Date().getFullYear()} Movie House. All rights reserved.</p>
-            <div className="mt-4 md:mt-0">
-              <Link href="/help/privacy" className="text-gray-300 hover:text-white mr-4">
+      <Box component="footer" sx={{ 
+        py: 3, 
+        px: 2, 
+        mt: 'auto', 
+        bgcolor: isDarkMode ? 'grey.800' : 'grey.200',
+        color: isDarkMode ? 'grey.50' : 'grey.900'
+      }}>
+        <Container maxWidth="lg">
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 2
+          }}>
+            <Typography variant="body2">
+              © {new Date().getFullYear()} Movie House. All rights reserved.
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button 
+                color="inherit" 
+                component={Link} 
+                href="/help/privacy"
+                size="small"
+              >
                 Privacy Policy
-              </Link>
-              <Link href="/help/contact" className="text-gray-300 hover:text-white">
+              </Button>
+              <Button 
+                color="inherit" 
+                component={Link} 
+                href="/help/contact"
+                size="small"
+              >
                 Contact
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-    </div>
+              </Button>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
+    </Box>
   );
 }

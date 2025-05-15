@@ -1,28 +1,20 @@
 // pages/api/directors/[id].js
-import { directors, movies } from '../../../data/mockData';
+import { getDirectorById } from '../../../utils/data';
 
 export default function handler(req, res) {
-  if (req.method === 'GET') {
-    const { id } = req.query;
-    const directorId = parseInt(id);
-    
-    // Find the director
-    const director = directors.find(d => d.id === directorId);
-    
-    if (director) {
-      // Find all movies by this director
-      const directorMovies = movies.filter(movie => movie.directorId === directorId);
-      
-      // Return director info with their movies
-      res.status(200).json({
-        ...director,
-        movies: directorMovies
-      });
-    } else {
-      res.status(404).json({ message: `Director with ID ${id} not found` });
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { id } = req.query;
+
+  try {
+    const director = getDirectorById(id);
+    if (!director) {
+      return res.status(404).json({ message: 'Director not found' });
     }
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    res.status(200).json(director);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching director', error: error.message });
   }
 }

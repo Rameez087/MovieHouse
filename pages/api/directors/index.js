@@ -1,11 +1,15 @@
 // pages/api/directors/index.js
-import { directors } from '../../../data/mockData';
+import { getDirectors } from '../../../utils/data';
 
 export default function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  try {
+    const directors = getDirectors();
     res.status(200).json(directors);
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching directors', error: error.message });
   }
 }

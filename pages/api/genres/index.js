@@ -1,11 +1,15 @@
 // pages/api/genres/index.js
-import { genres } from '../../../data/mockData';
+import { getGenres } from '../../../utils/data';
 
 export default function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  try {
+    const genres = getGenres();
     res.status(200).json(genres);
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching genres', error: error.message });
   }
 }

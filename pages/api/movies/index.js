@@ -1,11 +1,15 @@
 // pages/api/movies/index.js
-import { movies } from '../../../data/mockData';
+import { getMovies } from '../../../utils/data';
 
 export default function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  try {
+    const movies = getMovies();
     res.status(200).json(movies);
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching movies', error: error.message });
   }
 }
