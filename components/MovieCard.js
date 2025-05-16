@@ -7,7 +7,7 @@ export default function MovieCard({ movie }) {
     <div className={styles.card}>
       <div className={styles.cardImage}>
         <img 
-          src={`/images/movie-${movie.id}.jpg`}
+          src={`/images/movie-${movie._id}.jpg`}
           alt={movie.title}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
@@ -15,7 +15,7 @@ export default function MovieCard({ movie }) {
       <div className={styles.cardContent}>
         <h3>{movie.title}</h3>
         <p>{movie.releaseYear} • Rating: {movie.rating}/10</p>
-        <Link href={`/movies/${movie.id}`}>
+        <Link href={`/movies/${movie._id}`}>
           View Details
         </Link>
       </div>

@@ -1,36 +1,32 @@
 import Link from 'next/link';
 import Layout from '../../../components/Layout';
 import MovieCard from '../../../components/MovieCard';
-import { getMovieById, getDirectorById, getMoviesByDirector } from '../../../utils/data';
-import styles from '../../../styles/Director.module.css';
+import styles from '../../../styles/DirectorDetail.module.css';
 
-export default function MovieDirector({ movie, director, directedMovies }) {
-  if (!movie || !director) {
+export default function DirectorDetail({ director, movies, movieId }) {
+  if (!director) {
     return <div>Loading...</div>;
   }
 
   return (
     <Layout title={`Movie House - ${director.name}`}>
-      <div className={styles.backLink}>
-        <Link href={`/movies/${movie.id}`}>
-          <p>&larr; Back to {movie.title}</p>
-        </Link>
-      </div>
-      
-      <div className={styles.directorProfile}>
-        <h1>{director.name}</h1>
-        <div className={styles.biography}>
-          <h2>Biography</h2>
-          <p>{director.biography}</p>
+      <div className={styles.container}>
+        <div className={styles.directorInfo}>
+          <h1>{director.name}</h1>
+          <p className={styles.bio}>{director.bio}</p>
         </div>
-        
-        <div className={styles.filmography}>
-          <h2>Filmography</h2>
+
+        <div className={styles.moviesSection}>
+          <h2>Movies Directed</h2>
           <div className={styles.movieGrid}>
-            {directedMovies.map(movie => (
-              <MovieCard key={movie.id} movie={movie} />
+            {movies.map(movie => (
+              <MovieCard key={movie._id} movie={movie} />
             ))}
           </div>
+        </div>
+
+        <div className={styles.backLink}>
+          <Link href={`/movies/${movieId}`}>← Back to Movie</Link>
         </div>
       </div>
     </Layout>
@@ -38,30 +34,53 @@ export default function MovieDirector({ movie, director, directedMovies }) {
 }
 
 export async function getStaticPaths() {
-  return { 
-    paths: [], 
-    fallback: true 
-  };
+  try {
+    const res = await fetch('http://localhost:3000/api/movies');
+    const movies = await res.json();
+    
+    const paths = movies.map(movie => ({
+      params: { id: movie._id.toString() }
+    }));
+    
+    return { 
+      paths, 
+      fallback: true
+    };
+  } catch (error) {
+    console.error('Error generating paths:', error);
+    return {
+      paths: [],
+      fallback: true
+    };
+  }
 }
 
 export async function getStaticProps({ params }) {
-  const movie = getMovieById(params.id);
-  
-  if (!movie) {
+  try {
+    // First get the movie to get the director ID
+    const movieRes = await fetch(`http://localhost:3000/api/movies/${params.id}`);
+    const movie = await movieRes.json();
+
+    if (!movie || !movie.directorId) {
+      return { notFound: true };
+    }
+
+    // Then get the director and their movies
+    const directorRes = await fetch(`http://localhost:3000/api/directors/${movie.directorId._id}`);
+    const director = await directorRes.json();
+
     return {
-      notFound: true,
+      props: {
+        director,
+        movies: director.movies || [],
+        movieId: params.id
+      },
+      revalidate: 5
+    };
+  } catch (error) {
+    console.error('Error fetching director data:', error);
+    return {
+      notFound: true
     };
   }
-  
-  const director = getDirectorById(movie.directorId);
-  const directedMovies = getMoviesByDirector(director.id);
-  
-  return {
-    props: {
-      movie,
-      director,
-      directedMovies,
-    },
-    revalidate: 3600,
-  };
 }

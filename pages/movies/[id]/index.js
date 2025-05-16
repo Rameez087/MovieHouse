@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../../../components/Layout';
-import { getAllMovies, getMovieById, getGenreById, getDirectorById } from '../../../utils/data';
 import styles from '../../../styles/MovieDetail.module.css';
 
-export default function MovieDetail({ movie, genre, director }) {
+export default function MovieDetail({ movie }) {
   if (!movie) {
     return <div>Loading...</div>;
   }
@@ -14,7 +13,7 @@ export default function MovieDetail({ movie, genre, director }) {
       <div className={styles.movieDetail}>
         <div className={styles.posterContainer}>
           <img 
-            src={`/images/movie-${movie.id}.jpg`}
+            src={`/images/movie-${movie._id}.jpg`}
             alt={movie.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
@@ -26,14 +25,14 @@ export default function MovieDetail({ movie, genre, director }) {
             <span>{movie.releaseYear}</span>
             <span className={styles.rating}>Rating: {movie.rating}/10</span>
             <span className={styles.genre}>
-              Genre: <Link href={`/genres/${genre.id}`}><p>{genre.name}</p></Link>
+              Genre: <Link href={`/genres/${movie.genreId._id}`}><p>{movie.genreId.name}</p></Link>
             </span>
           </div>
           
           <div className={styles.director}>
             <h3>Director:</h3>
-            <Link href={`/movies/${movie.id}/director`}>
-              <p className={styles.directorLink}>{director.name}</p>
+            <Link href={`/movies/${movie._id}/director`}>
+              <p className={styles.directorLink}>{movie.directorId.name}</p>
             </Link>
           </div>
           
@@ -48,38 +47,34 @@ export default function MovieDetail({ movie, genre, director }) {
 }
 
 export async function getStaticPaths() {
-  const movies = getAllMovies();
+  const res = await fetch('http://localhost:3000/api/movies');
+  const movies = await res.json();
   
   const paths = movies.map(movie => ({
-    params: { id: movie.id.toString() }
+    params: { id: movie._id.toString() }
   }));
   
   return { 
     paths, 
-    fallback: true // Enable fallback for movies not in the paths
+    fallback: true
   };
 }
 
 export async function getStaticProps({ params }) {
-  console.log(`movie id is: ${params.id}`)
-  const movie = getMovieById(params.id);
-  
-  // If movie doesn't exist, return 404
-  if (!movie) {
+  try {
+    const res = await fetch(`http://localhost:3000/api/movies/${params.id}`);
+    const movie = await res.json();
+    
     return {
-      notFound: true,
+      props: {
+        movie
+      },
+      revalidate: 5
+    };
+  } catch (error) {
+    console.error('Error fetching movie:', error);
+    return {
+      notFound: true
     };
   }
-  
-  const genre = getGenreById(movie.genreId);
-  const director = getDirectorById(movie.directorId);
-  
-  return {
-    props: {
-      movie,
-      genre,
-      director,
-    },
-    revalidate: 5, // Revalidate every hour
-  };
 }

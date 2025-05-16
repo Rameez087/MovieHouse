@@ -1,23 +1,50 @@
 // pages/api/directors/index.js
-import { getAllDirectors, getAllMovies } from '../../../utils/data';
+import connectDB from '../../../utils/mongodb';
+import Director from '../../../models/Director';
+import Movie from '../../../models/Movie';
 
-export default function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export default async function handler(req, res) {
+  await connectDB();
 
-  try {
-    const directors = getAllDirectors();
-    const movies = getAllMovies();
-    
-    // Add movie count to each director
-    const directorsWithMovieCount = directors.map(director => ({
-      ...director,
-      movieCount: movies.filter(movie => movie.directorId === director.id).length
-    }));
+  switch (req.method) {
+    case 'GET':
+      try {
+        console.log('Fetching all directors...');
+        const directors = await Director.find({});
+        console.log('Found directors:', directors.map(d => ({ id: d._id, name: d.name })));
+        
+        // Get movie counts for each director
+        const directorsWithCounts = await Promise.all(
+          directors.map(async (director) => {
+            const movieCount = await Movie.countDocuments({ directorId: director._id });
+            const directorObj = director.toObject();
+            console.log('Director with count:', { id: directorObj._id, name: directorObj.name, movieCount });
+            return {
+              ...directorObj,
+              movieCount
+            };
+          })
+        );
 
-    res.status(200).json(directorsWithMovieCount);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching directors', error: error.message });
+        console.log('Returning directors with counts:', directorsWithCounts.length);
+        res.status(200).json(directorsWithCounts);
+      } catch (error) {
+        console.error('Error fetching directors:', error);
+        res.status(500).json({ message: 'Error fetching directors', error: error.message });
+      }
+      break;
+
+    case 'POST':
+      try {
+        const director = await Director.create(req.body);
+        res.status(201).json(director);
+      } catch (error) {
+        res.status(400).json({ message: 'Error creating director', error: error.message });
+      }
+      break;
+
+    default:
+      res.status(405).json({ message: 'Method not allowed' });
+      break;
   }
 }

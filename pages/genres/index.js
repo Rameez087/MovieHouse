@@ -1,33 +1,43 @@
 import Link from 'next/link';
 import Layout from '../../components/Layout';
-import { getAllGenres } from '../../utils/data';
 import styles from '../../styles/Genres.module.css';
 
 export default function Genres({ genres }) {
   return (
     <Layout title="Movie House - Genres">
-      <h1 className={styles.title}>Browse Movies by Genre</h1>
-      
-      <div className={styles.genreGrid}>
-        {genres.map(genre => (
-          <Link href={`/genres/${genre.id}`} key={genre.id}>
-            <p className={styles.genreCard}>
-              <h2>{genre.name}</h2>
-              <span className={styles.arrow}>→</span>
-            </p>
-          </Link>
-        ))}
+      <div className={styles.container}>
+        <h1>Movie Genres</h1>
+        <div className={styles.genreGrid}>
+          {genres.map(genre => (
+            <Link href={`/genres/${genre._id}`} key={genre._id}>
+              <div className={styles.genreCard}>
+                <h2>{genre.name}</h2>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </Layout>
   );
 }
 
-export async function getServerSideProps() {
-  const genres = getAllGenres();
-  
-  return {
-    props: {
-      genres,
-    },
-  };
+export async function getStaticProps() {
+  try {
+    const res = await fetch('http://localhost:3000/api/genres');
+    const genres = await res.json();
+
+    return {
+      props: {
+        genres
+      },
+      revalidate: 5
+    };
+  } catch (error) {
+    console.error('Error fetching genres:', error);
+    return {
+      props: {
+        genres: []
+      }
+    };
+  }
 }

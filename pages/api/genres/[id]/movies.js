@@ -1,7 +1,8 @@
 // pages/api/genres/[id]/movies.js
-import { getMoviesByGenre } from '../../../../utils/data';
+import connectDB from '../../../../utils/mongodb';
+import Movie from '../../../../models/Movie';
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -9,7 +10,10 @@ export default function handler(req, res) {
   const { id } = req.query;
 
   try {
-    const movies = getMoviesByGenre(id);
+    await connectDB();
+    const movies = await Movie.find({ genreId: id })
+      .populate('genreId', 'name')
+      .populate('directorId', 'name');
     res.status(200).json(movies);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching movies by genre', error: error.message });

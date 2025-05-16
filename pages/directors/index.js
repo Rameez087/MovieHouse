@@ -16,9 +16,11 @@ export default function Directors() {
           throw new Error('Failed to fetch directors');
         }
         const data = await response.json();
+        console.log('Fetched directors:', data);
         setDirectors(data);
         setLoading(false);
       } catch (err) {
+        console.error('Error fetching directors:', err);
         setError(err.message);
         setLoading(false);
       }
@@ -44,18 +46,24 @@ export default function Directors() {
       <h1 className={styles.title}>Directors</h1>
       
       <div className={styles.directorsGrid}>
-        {directors.map(director => (
-          <div key={director.id} className={styles.directorCard}>
-            <h2>{director.name}</h2>
-            <p className={styles.biography}>{director.biography}</p>
-            <div className={styles.movieCount}>
-              <span>Movies in database: {director.movieCount}</span>
+        {directors.map(director => {
+          console.log('Rendering director:', director);
+          const directorId = director._id?.toString();
+          console.log('Director ID for link:', directorId);
+          
+          return (
+            <div key={directorId} className={styles.directorCard}>
+              <h2>{director.name}</h2>
+              <p className={styles.bio}>{director.bio}</p>
+              <div className={styles.movieCount}>
+                <span>Movies in database: {director.movieCount || 0}</span>
+              </div>
+              <Link href={`/directors/${directorId}`}>
+                <p className={styles.viewMoviesButton}>View Movies</p>
+              </Link>
             </div>
-            <Link href={`/directors/${director.id}`}>
-              <p className={styles.viewMoviesButton}>View Movies</p>
-            </Link>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </Layout>
   );
