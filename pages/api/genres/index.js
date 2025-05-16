@@ -1,14 +1,12 @@
-// pages/api/genres/index.js
-import connectDB from '../../../utils/mongodb';
-import Genre from '../../../models/Genre';
+import { connectToDatabase } from '../../../utils/mongodb';
 
 export default async function handler(req, res) {
-  await connectDB();
+  const { db } = await connectToDatabase();
 
   switch (req.method) {
     case 'GET':
       try {
-        const genres = await Genre.find({});
+        const genres = await db.collection('genres').find({}).toArray();
         res.status(200).json(genres);
       } catch (error) {
         res.status(500).json({ message: 'Error fetching genres', error: error.message });
@@ -17,8 +15,8 @@ export default async function handler(req, res) {
 
     case 'POST':
       try {
-        const genre = await Genre.create(req.body);
-        res.status(201).json(genre);
+        const result = await db.collection('genres').insertOne(req.body);
+        res.status(201).json(result);
       } catch (error) {
         res.status(400).json({ message: 'Error creating genre', error: error.message });
       }
@@ -26,6 +24,5 @@ export default async function handler(req, res) {
 
     default:
       res.status(405).json({ message: 'Method not allowed' });
-      break;
   }
 }

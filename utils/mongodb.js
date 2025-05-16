@@ -1,59 +1,35 @@
-import mongoose from 'mongoose';
+import { MongoClient } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+if (!process.env.MONGODB_URI) {
+  throw new Error('Please add your Mongo URI to .env.local');
 }
 
-let cached = global.mongoose;
+const uri = process.env.MONGODB_URI;
+const options = {};
 
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+let client;
+let clientPromise;
+
+if (process.env.NODE_ENV === 'development') {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    global._mongoClientPromise = client.connect();
+  }
+  clientPromise = global._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
 }
 
-async function connectDB() {
-  if (cached.conn) {
-    console.log('Using cached database connection');
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    console.log('Connecting to MongoDB Atlas...');
-    
-    cached.promise = mongoose.connect(MONGODB_URI, opts)
-      .then(async (mongoose) => {
-        console.log('MongoDB Atlas connected successfully');
-        
-        // Verify the connection
-        const db = mongoose.connection.db;
-        console.log('Connected to database:', db.databaseName);
-        
-        // List all collections
-        const collections = await db.listCollections().toArray();
-        console.log('Available collections:', collections.map(c => c.name));
-        
-        return mongoose;
-      })
-      .catch((error) => {
-        console.error('MongoDB Atlas connection error:', error);
-        throw error;
-      });
-  }
-
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    console.error('Error in cached connection:', e);
-    throw e;
-  }
-
-  return cached.conn;
+export async function connectToDatabase() {
+  const client = await clientPromise;
+  const db = client.db(process.env.MONGODB_DB);
+  return { client, db };
 }
 
-export default connectDB; 
+// Export a module-scoped MongoClient promise. By doing this in a
+// separate module, the client can be shared across functions.
+export default clientPromise; 

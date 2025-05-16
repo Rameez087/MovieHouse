@@ -1,23 +1,24 @@
 // pages/api/directors/index.js
-import connectDB from '../../../utils/mongodb';
-import Director from '../../../models/Director';
-import Movie from '../../../models/Movie';
+import { connectToDatabase } from '../../../utils/mongodb';
+import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
-  await connectDB();
+  const { db } = await connectToDatabase();
 
   switch (req.method) {
     case 'GET':
       try {
         console.log('Fetching all directors...');
-        const directors = await Director.find({});
+        const directors = await db.collection('directors').find({}).toArray();
         console.log('Found directors:', directors.map(d => ({ id: d._id, name: d.name })));
         
         // Get movie counts for each director
         const directorsWithCounts = await Promise.all(
           directors.map(async (director) => {
-            const movieCount = await Movie.countDocuments({ directorId: director._id });
-            const directorObj = director.toObject();
+            const movieCount = await db.collection('movies').countDocuments({ 
+              directorId: new ObjectId(director._id) 
+            });
+            const directorObj = director;
             console.log('Director with count:', { id: directorObj._id, name: directorObj.name, movieCount });
             return {
               ...directorObj,
@@ -36,8 +37,8 @@ export default async function handler(req, res) {
 
     case 'POST':
       try {
-        const director = await Director.create(req.body);
-        res.status(201).json(director);
+        const result = await db.collection('directors').insertOne(req.body);
+        res.status(201).json(result);
       } catch (error) {
         res.status(400).json({ message: 'Error creating director', error: error.message });
       }
