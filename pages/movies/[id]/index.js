@@ -13,12 +13,10 @@ export default function MovieDetail({ movie, genre, director }) {
     <Layout title={`Movie House - ${movie.title}`}>
       <div className={styles.movieDetail}>
         <div className={styles.posterContainer}>
-          <Image 
-            src={`/images/movie-${movie.id % 5 + 1}.jpg`}
+          <img 
+            src={`/images/movie-${movie.id}.jpg`}
             alt={movie.title}
-            width={300}
-            height={450}
-            layout="responsive"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         </div>
         

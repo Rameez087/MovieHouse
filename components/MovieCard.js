@@ -6,12 +6,10 @@ export default function MovieCard({ movie }) {
   return (
     <div className={styles.card}>
       <div className={styles.cardImage}>
-        <Image 
-          src={`/images/movie-${movie.id % 5 + 1}.jpg`} 
+        <img 
+          src={`/images/movie-${movie.id}.jpg`}
           alt={movie.title}
-          width={300}
-          height={450}
-          layout="responsive"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </div>
       <div className={styles.cardContent}>

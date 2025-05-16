@@ -1,5 +1,5 @@
 // pages/api/directors/[id].js
-import { getDirectorById } from '../../../utils/data';
+import { getDirectorById, getMoviesByDirector } from '../../../utils/data';
 
 export default function handler(req, res) {
   if (req.method !== 'GET') {
@@ -13,7 +13,9 @@ export default function handler(req, res) {
     if (!director) {
       return res.status(404).json({ message: 'Director not found' });
     }
-    res.status(200).json(director);
+    
+    const movies = getMoviesByDirector(id);
+    res.status(200).json({ director, movies });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching director', error: error.message });
   }
